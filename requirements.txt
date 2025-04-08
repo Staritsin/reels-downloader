@@ -1,12 +1,2 @@
 flask
-yt-dlp
-requests
 gunicorn
-
-
-
-waitress
-
-
-
-
