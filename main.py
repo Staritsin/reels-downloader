@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
-import yt_dlp
-import os
+import requests
 
 app = Flask(__name__)
 
@@ -10,25 +9,25 @@ def download():
     if not url:
         return jsonify({"error": "URL is missing"}), 400
 
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.70 Safari/537.36"
+    }
+
+    response = requests.get(url, headers=headers)
+    html = response.text
+
     try:
-        ydl_opts = {
-            "quiet": True,
-            "skip_download": True,
-            "forcejson": True,
-        }
-
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-
-        return jsonify({
-            "video_url": info.get("url"),
-            "title": info.get("title"),
-            "thumbnail": info.get("thumbnail"),
-        })
-
+        video_url = html.split('"video_url":"')[1].split('"')[0].replace("\\u0026", "&")
+        thumbnail = html.split('"thumbnail_src":"')[1].split('"')[0].replace("\\u0026", "&")
+        title = html.split('"title":"')[1].split('"')[0]
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Парсинг не удался: {str(e)}"}), 500
+
+    return jsonify({
+        "video_url": video_url,
+        "thumbnail": thumbnail,
+        "title": title
+    })
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=8000)
