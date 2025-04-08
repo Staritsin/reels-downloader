@@ -9,6 +9,6 @@ def download():
         return jsonify({"error": "URL is missing"}), 400
     return jsonify({"message": f"Получил ссылку: {url}"}), 200
 
-if __name__ == "__main__":
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=8000)
+# ЭТО НЕ НУЖНО В Railway:
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=8000)
