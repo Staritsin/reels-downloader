@@ -8,3 +8,6 @@ def download():
     if not url:
         return jsonify({"error": "URL is missing"}), 400
     return jsonify({"message": f"Получил ссылку: {url}"}), 200
+
+# ВАЖНО для gunicorn:
+app = app
