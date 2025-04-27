@@ -1,1 +1,6 @@
+Flask
+yt-dlp
+requests
+openai
+python-dotenv
 
