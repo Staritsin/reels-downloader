@@ -1,1 +1,1 @@
-web: bash install-ffmpeg.sh && python main.py
+web: python3 main.py
